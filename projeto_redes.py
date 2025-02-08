@@ -8,13 +8,44 @@ class Tree:
     def __init__(self):
         self.graph = defaultdict(list)
         self.ip_map = {}  # Armazena os endereços IP dos nós
+        self.traceroute = []
 
     def add_edge(self, u, v, weight):
+        # Define o estado de visita inicial do nó como False
+        if u not in self.graph:
+            self.graph[u] = [False]
+        if v not in self.graph:
+            self.graph[v] = [False]
+
+        # Adiciona a aresta ao nó
         self.graph[u].append((v, weight))
         self.graph[v].append((u, weight))
 
     def add_ip(self, node, ip):
         self.ip_map[node] = ip
+
+    def set_nodes_visited(self):
+        for node in self.graph:
+            node[0] = False
+
+    def find_traceroute(self, no_atual, no_destino, path=None):
+        if path is None:
+            path = []
+        
+        path.append(no_atual)
+        self.graph[no_atual][0] = True
+
+        if no_atual == no_destino:
+            return path
+        
+        for neighbor, _ in self.graph[no_atual][1:]:
+            if not self.graph[neighbor][0]:
+                result = self.find_traceroute(neighbor, no_destino, path[:])
+                if result:
+                    return result
+            
+        return None
+
 
     def find_distance(self, x, y):
         queue = deque([(x, 0)])  # (nó atual, distância acumulada)
@@ -25,15 +56,15 @@ class Tree:
             node, distance = queue.popleft()
 
             if node == y:
-                return distance  # Encontramos Y, retornamos a distância
+                return (distance, visited.copy)  # Encontramos Y, retornamos a distância
 
-            for neighbor, weight in self.graph[node]:
+            for neighbor, weight in self.graph[node][1:]:
                 if neighbor not in visited:
                     visited.add(neighbor)
                     queue.append((neighbor, distance + weight))
 
         return -1  # Caso não encontre um caminho
-
+            
 # Criando a árvore
 tree = Tree()
 
@@ -85,25 +116,19 @@ x = input().strip()
 y = input().strip()
 
 # Calculando a distância entre X e Y
-distance = tree.find_distance(x, y)
+#ping, traceroute = tree.find_distance(x, y)
+traceroute = tree.find_traceroute(x, y)
 
 # Obtendo endereços IP
 ip_x = tree.ip_map.get(x, "IP desconhecido")
 ip_y = tree.ip_map.get(y, "IP desconhecido")
 
 # Exibindo resultado
-print(f"Tempo de ping esperado: {distance} ms.")
+#print(f"Tempo de ping esperado: {ping} ms.")
+#print(f"Rota realizada: {' -> '.join(traceroute())}")
+print(traceroute)
 print(f"Endereço IP de {x}: {ip_x}")
 print(f"Endereço IP de {y}: {ip_y}\n")
-
-
-
-
-
-
-
-
-
 
 pos = nx.spring_layout(grafo)
 plt.figure(figsize=(10, 10))
