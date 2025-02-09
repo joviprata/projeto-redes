@@ -3,16 +3,10 @@ from matplotlib import pylab as pl
 import matplotlib.pyplot as plt
 import networkx as nx
 
-from matplotlib import pylab as pl
-import matplotlib.pyplot as plt
-import networkx as nx
-
-
 class Tree:
     def __init__(self):
         self.graph = defaultdict(list)
         self.ip_map = {}  # Armazena os endereços IP dos nós
-        self.traceroute = []        self.traceroute = []
 
         self.speed_map = { #velocidade do meio físico (km/s)
             "fibra": 200000,
@@ -24,6 +18,8 @@ class Tree:
             "coaxial": 2e-3,
             "par_trancado": 1e-3,
         }
+
+    # define o tipo do enlace
     def cable_type_def(self, u, v):
         if u.startswith('h') or v.startswith('h'):
             return "par_trancado" 
@@ -32,6 +28,7 @@ class Tree:
         else:
             return "fibra"
 
+    # define a distância real entre os nós
     def real_distance_def(self, tipo_cabo):
         if tipo_cabo == "fibra":
             return 10000 #simula link transoceânico
@@ -39,22 +36,16 @@ class Tree:
             return 200 #simula link de longa distância
         else:
             return 100 #simula conexões residenciais
-        return 10
     
+    # Adiciona a arvore o enlace
     def add_edge(self, u, v, weight=None):
-        # Define o estado de visita inicial do nó como False
-        if u not in self.graph:
-            self.graph[u] = [False]
-        if v not in self.graph:
-            self.graph[v] = [False]
-
         # Adiciona a aresta ao nó
         tipo_cabo = self.cable_type_def(u, v)
-        # Define o estado de visita inicial do nó como False
 
         if weight is None:
             weight = self.real_distance_def(tipo_cabo)
 
+        # Define o estado de visita inicial do nó como False
         if u not in self.graph:
             self.graph[u] = [False]
         if v not in self.graph:
@@ -96,21 +87,29 @@ class Tree:
             node[0] = False
 
     def find_traceroute(self, no_atual, no_destino, path=None):
+        # se não tiver sido definido um caminho
         if path is None:
             path = []
         
+        # adiciona o atual ao caminho e define o nó como visitado
         path.append(no_atual)
         self.graph[no_atual][0] = True
 
+        # se o nó atual for o destino, retorna o caminho encontrado
         if no_atual == no_destino:
             return path
         
+        """
+        Para cada vizinho do nó atual, verifica se ele já foi visitado, se não, ele faz uma recursão 
+        definindo o nó atual como o nó vizinho, o destino não se altera e o caminho será todo o caminho encontrado até o momento    
+        """
         for neighbor, _, tipo_cabo in self.graph[no_atual][1:]:
             if not self.graph[neighbor][0]:
                 result = self.find_traceroute(neighbor, no_destino, path[:])
+                # Se o caminho retornado for diferente de None, retorna o caminho encontrado, caso contrario repete a recursão com o próximo vizinho
                 if result:
                     return result
-            
+        # Caso ele passe por todos os vizinhos, ele retorna none
         return None
 
 
@@ -152,11 +151,11 @@ class Tree:
                         self.add_ip(node, host_ip)
 
 
-# Criando a árvore
+# Criando a árvore e grafo
 tree = Tree()
-
 grafo = nx.Graph()
 
+# Função para ler o arquivo de entrada
 def le_arquivo(arquivo):
     with open(arquivo, 'r') as f:
         for line in f:
@@ -169,59 +168,6 @@ def le_arquivo(arquivo):
             elif len(parts) == 2:  # Entrada de endereço IP (nó ip)
                 node, ip = parts
                 tree.add_ip(node, ip)
-
-"""
-grafo = nx.Graph()
-
-def le_arquivo(arquivo):
-    with open(arquivo, 'r') as f:
-        for line in f:
-            parts = line.split()
-
-            if len(parts) == 3:  # Entrada de aresta (nó1 nó2 peso)
-                u, v, weight = parts
-                tree.add_edge(u, v, int(weight))
-                grafo.add_edge(u, v, weight=int(weight))
-            elif len(parts) == 2:  # Entrada de endereço IP (nó ip)
-                node, ip = parts
-                tree.add_ip(node, ip)
-
-"""
-# Lendo as arestas
-while True:
-    try:
-        line = input().strip()
-        if not line:
-            continue
-        parts = line.split()
-
-        if len(parts) == 3:  # Entrada de aresta (nó1 nó2 peso)
-            u, v, weight = parts
-            tree.add_edge(u, v, int(weight))
-            grafo.add_edge(u, v, weight=int(weight))
-            grafo.add_edge(u, v, weight=int(weight))
-        elif len(parts) == 2:  # Entrada de endereço IP (nó ip)
-            node, ip = parts
-            tree.add_ip(node, ip)
-        else:
-            # Últimos dois inputs são os nós X e Y
-            x = parts[0]
-            y = input().strip()
-            break
-    except EOFError:
-        break
-"""
-
-# Lendo arquivo
-le_arquivo('exemplo-de-input.txt')
-
-#adiciona ips aos hosts
-tree.assign_host_ips()
-
-# Adiciona origem e destino
-x = input("Digite o nó de origem: ").strip()
-y = input("Digite o nó de destino: ").strip()
-"""
 
 # Lendo arquivo
 le_arquivo('exemplo-de-input.txt')
@@ -232,7 +178,6 @@ y = input().strip()
 
 # Calculando a distância entre X e Y
 #ping, traceroute = tree.find_#ping, traceroute(x, y)
-traceroute = tree.find_traceroute(x, y)
 tempo_ping = tree.find_distance(x, y)
 traceroute = tree.find_traceroute(x, y)
 
@@ -241,7 +186,7 @@ ip_x = tree.ip_map.get(x, "IP desconhecido")
 ip_y = tree.ip_map.get(y, "IP desconhecido")
 
 # Exibindo resultado
-print(f"Tempo de ping esperado: {distance} ms.")
+print(f"Tempo de ping esperado: {tempo_ping} ms.")
 print(f"Endereço IP de {x}: {ip_x}")
 print(f"Endereço IP de {y}: {ip_y}\n\n")
 #print(traceroute)
@@ -279,21 +224,3 @@ def desenhar_topologia():
 
 
 desenhar_topologia()
-
-# pos = nx.spring_layout(grafo)
-# plt.figure(figsize=(10, 10))
-
-# # Desenhando o grafo
-# nx.draw(grafo, pos, with_labels=True, node_size=500, 
-#         node_color="skyblue", font_size=10, font_color="black", 
-#         font_weight="bold", arrows=True)
-# plt.show()
-pos = nx.spring_layout(grafo)
-plt.figure(figsize=(10, 10))
-
-# Desenhando o grafo
-nx.draw(grafo, pos, with_labels=True, node_size=500, 
-        node_color="skyblue", font_size=10, font_color="black", 
-        font_weight="bold", arrows=True)
-plt.show()
-
