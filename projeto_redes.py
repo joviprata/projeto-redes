@@ -173,7 +173,7 @@ if traceroute:
 else:
     print("Caminho não encontrado")
 
-def desenhar_topologia():
+def desenhar_topologia(traceroute):
     pos = nx.spring_layout(grafo)
     plt.figure(figsize=(10, 10))
 
@@ -188,8 +188,20 @@ def desenhar_topologia():
     nx.draw(grafo, pos, with_labels=True, node_size=500, 
             node_color="skyblue", font_size=10, font_color="black", 
             font_weight="bold", arrows=True, edge_color=cores)
-    plt.show()
+    #plt.show()
+    plt.savefig('./imagens/grafo', transparent=False, facecolor='w')
+    plt.close()
+
+    for i in range(1,len(traceroute)):
+        subgrafo = grafo.subgraph(traceroute[:i])
+        pos = nx.spring_layout(subgrafo)
+        nx.draw(subgrafo, pos, with_labels=True, node_size=500, 
+            node_color="skyblue", font_size=10, font_color="black", 
+            font_weight="bold", arrows=True, edge_color=cores)
+        plt.savefig(f'./imagens/caminho{i+1}', transparent=False, facecolor='w')
+        plt.close()
+        
 
 
-
-desenhar_topologia()
+if traceroute:
+    desenhar_topologia(traceroute)
