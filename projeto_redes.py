@@ -135,30 +135,6 @@ def le_arquivo(arquivo):
                 node, ip = parts
                 tree.add_ip(node, ip)
 
-"""
-# Lendo as arestas
-while True:
-    try:
-        line = input().strip()
-        if not line:
-            continue
-        parts = line.split()
-
-        if len(parts) == 3:  # Entrada de aresta (nó1 nó2 peso)
-            u, v, weight = parts
-            tree.add_edge(u, v, int(weight))
-            grafo.add_edge(u, v, weight=int(weight))
-        elif len(parts) == 2:  # Entrada de endereço IP (nó ip)
-            node, ip = parts
-            tree.add_ip(node, ip)
-        else:
-            # Últimos dois inputs são os nós X e Y
-            x = parts[0]
-            y = input().strip()
-            break
-    except EOFError:
-        break
-"""
 
 # Lendo arquivo
 le_arquivo('exemplo-de-input.txt')
@@ -217,12 +193,3 @@ def desenhar_topologia():
 
 
 desenhar_topologia()
-
-# pos = nx.spring_layout(grafo)
-# plt.figure(figsize=(10, 10))
-
-# # Desenhando o grafo
-# nx.draw(grafo, pos, with_labels=True, node_size=500, 
-#         node_color="skyblue", font_size=10, font_color="black", 
-#         font_weight="bold", arrows=True)
-# plt.show()
