@@ -169,6 +169,10 @@ def le_arquivo(arquivo):
                 node, ip = parts
                 tree.add_ip(node, ip)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> leticia
 # Lendo arquivo
 le_arquivo('exemplo-de-input.txt')
 
@@ -223,4 +227,8 @@ def desenhar_topologia():
 
 
 
+<<<<<<< HEAD
 desenhar_topologia()
+=======
+desenhar_topologia()
+>>>>>>> leticia
