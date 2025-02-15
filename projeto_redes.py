@@ -99,10 +99,19 @@ for (start, end), paths in all_paths.items():
     for path in paths:
         print(" -> ".join(path))
 
-# Desenha o layout do grafo
+# Ajustando layout para melhor organização
+pos = nx.kamada_kawai_layout(grafo)  # Layout mais estável e organizado
+
+# Definição de cores conforme o tipo de cabo
+cabos_cores = {"fibra": "blue", "coaxial": "red", "par_trancado": "green"}
+cores = [cabos_cores[tree.cable_type_def(u, v)] for u, v in grafo.edges()]
+
+# Desenha o layout do grafo corrigido
 plt.figure(figsize=(10, 10))
-pos = nx.spring_layout(grafo)
-nx.draw(grafo, pos, with_labels=True, node_size=500, node_color="skyblue", font_size=10, font_color="black", font_weight="bold", arrows=True)
+nx.draw(grafo, pos, with_labels=True, node_size=500, node_color="skyblue", 
+        font_size=10, font_color="black", font_weight="bold", arrows=True, edge_color=cores)
+plt.savefig('grafo_resultante.png', transparent=False, facecolor='w')
+print("\nGrafo resultante:")
 plt.show()
 
 # Criar tabela de Dijkstra
