@@ -104,12 +104,23 @@ pos = nx.kamada_kawai_layout(grafo)  # Layout mais estável e organizado
 
 # Definição de cores conforme o tipo de cabo
 cabos_cores = {"fibra": "blue", "coaxial": "red", "par_trancado": "green"}
-cores = [cabos_cores[tree.cable_type_def(u, v)] for u, v in grafo.edges()]
+cores_arestas = [cabos_cores[tree.cable_type_def(u, v)] for u, v in grafo.edges()]
+
+# Identificar nós folhas
+nos_folhas = [node for node in grafo.nodes() if len(tree.graph[node]) == 1]
+
+# Definição de cores dos nós
+cores_nos = ["lightgreen" if node in nos_folhas else "skyblue" for node in grafo.nodes()]
+
+# Mapear os rótulos dos nós para os endereços IP
+rotulos_nos = {node: tree.ip_map.get(node, node) for node in grafo.nodes()}
 
 # Desenha o layout do grafo corrigido
 plt.figure(figsize=(10, 10))
-nx.draw(grafo, pos, with_labels=True, node_size=500, node_color="skyblue", 
-        font_size=10, font_color="black", font_weight="bold", arrows=True, edge_color=cores)
+nx.draw(
+    grafo, pos, labels=rotulos_nos, with_labels=True, node_size=500, node_color=cores_nos, 
+    font_size=10, font_color="black", font_weight="bold", arrows=True, edge_color=cores_arestas
+)
 plt.savefig('grafo_resultante.png', transparent=False, facecolor='w')
 print("\nGrafo resultante:")
 plt.show()
