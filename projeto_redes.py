@@ -94,7 +94,31 @@ def le_arquivo(arquivo):
 le_arquivo('exemplo-de-input.txt')
 all_paths = tree.calculate_all_paths()
 
-# Ajustando layout para melhor organização
+def consulta_ping():
+    x = input("Digite o nó de origem: ").strip()
+    y = input("Digite o nó de destino: ").strip()
+
+    if x not in tree.graph or y not in tree.graph:
+        print("Erro: Um ou ambos os nós não existem no grafo.")
+        return
+
+    # Obter o tempo de ping esperado
+    distance = dijkstra_tabela.at[x, y] if pd.notna(dijkstra_tabela.at[x, y]) else "Indisponível"
+
+    # Buscar endereços IP
+    ip_x = tree.ip_map.get(x, "IP não encontrado")
+    ip_y = tree.ip_map.get(y, "IP não encontrado")
+
+    # Exibir resultados
+    print("\n=== Resultado da Consulta ===")
+    print(f"Tempo de ping esperado: {distance} ms")
+    print(f"Endereço IP de {x}: {ip_x}")
+    print(f"Endereço IP de {y}: {ip_y}")
+    print("==============================")
+
+# Chamar a função para interação com o usuário
+consulta_ping()
+
 # Ajustando layout para melhor organização
 pos = nx.kamada_kawai_layout(grafo)  # Layout mais estável e organizado
 
