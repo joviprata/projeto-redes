@@ -94,6 +94,23 @@ def le_arquivo(arquivo):
 le_arquivo('exemplo-de-input.txt')
 all_paths = tree.calculate_all_paths()
 
+def melhor_rota(x, y):
+    caminhos = tree.find_all_paths(x, y)
+    if not caminhos:
+        return "Nenhuma rota disponível"
+
+    # Escolher o menor caminho em número de saltos
+    melhor_caminho = min(caminhos, key=len)
+
+    # Construir a string da rota com os tipos de cabo
+    rota_str = []
+    for i in range(len(melhor_caminho) - 1):
+        u, v = melhor_caminho[i], melhor_caminho[i + 1]
+        tipo_cabo = tree.cable_type_def(u, v)
+        rota_str.append(f"{u} -({tipo_cabo})-> {v}")
+
+    return " -> ".join(rota_str)
+
 def consulta_ping():
     x = input("Digite o nó de origem: ").strip()
     y = input("Digite o nó de destino: ").strip()
@@ -102,18 +119,22 @@ def consulta_ping():
         print("Erro: Um ou ambos os nós não existem no grafo.")
         return
 
-    # Obter o tempo de ping esperado
+    # Obter tempo de ping esperado
     distance = dijkstra_tabela.at[x, y] if pd.notna(dijkstra_tabela.at[x, y]) else "Indisponível"
 
     # Buscar endereços IP
     ip_x = tree.ip_map.get(x, "IP não encontrado")
     ip_y = tree.ip_map.get(y, "IP não encontrado")
 
+    # Obter a melhor rota
+    rota = melhor_rota(x, y)
+
     # Exibir resultados
     print("\n=== Resultado da Consulta ===")
-    print(f"Tempo de ping esperado: {distance} ms")
     print(f"Endereço IP de {x}: {ip_x}")
     print(f"Endereço IP de {y}: {ip_y}")
+    print(f"\nTempo de ping esperado: {distance} s")
+    print(f"Rota realizada: {rota}")
     print("==============================")
 
 # Chamar a função para interação com o usuário
