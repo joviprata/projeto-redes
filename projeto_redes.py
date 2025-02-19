@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 
+# Classe arvore que representa a rede
 class Tree:
     def __init__(self):
         self.graph = defaultdict(list)
@@ -18,6 +19,7 @@ class Tree:
             "par_trancado": 1e-3,
         }
 
+    # Define o tipo do enlace a depender de quem está realizando a conexão.
     def cable_type_def(self, u, v):
         if u.startswith('h') or v.startswith('h'):
             return "par_trancado"
@@ -26,9 +28,11 @@ class Tree:
         else:
             return "fibra"
 
+    # Define a distancia real do enlace
     def real_distance_def(self, tipo_cabo):
         return {"fibra": 10000, "coaxial": 200, "par_trancado": 100}.get(tipo_cabo, 10)
 
+    # Função que adiciona as arestas a arvore
     def add_edge(self, u, v, weight=None):
         tipo_cabo = self.cable_type_def(u, v)
         if weight is None:
@@ -36,9 +40,11 @@ class Tree:
         self.graph[u].append((v, int(weight), tipo_cabo))
         self.graph[v].append((u, int(weight), tipo_cabo))
 
+    # Função responsavel por definir o ip de cada um dos dispositivos
     def add_ip(self, node, ip):
         self.ip_map[node] = ip
 
+    # Encontra o caminho de um dispositivo até outro
     def find_all_paths(self, start, end, path=[]):
         path = path + [start]
         if start == end:
@@ -51,6 +57,7 @@ class Tree:
                     paths.append(p)
         return paths
 
+    # Encontra todos os caminhos de cada um dos dispositivos até todos os outros dispositivos da rede
     def calculate_all_paths(self):
         nodes = list(self.graph.keys())
         all_paths = {}
@@ -62,6 +69,7 @@ class Tree:
                     all_paths[(start, end)] = paths
         return all_paths
 
+    # Monta a tabela de roteamento de um dado vertice
     def dijkstra(self, start):
         distances = {node: float('inf') for node in self.graph}
         distances[start] = 0
@@ -76,9 +84,11 @@ class Tree:
                     queue.append(neighbor)
         return distances
 
+# Inicializa a arvore e o grafo ilustrativo da rede.
 tree = Tree()
 grafo = nx.Graph()
 
+# Função responsavel por ler o arquivo exemplo-de-input.txt e montrar a arvore a partir das informações apresentadas.
 def le_arquivo(arquivo):
     with open(arquivo, 'r') as f:
         for line in f:
@@ -91,9 +101,11 @@ def le_arquivo(arquivo):
                 node, ip = parts
                 tree.add_ip(node, ip)
 
+# Chama as funções para montar a arvore e calcular os caminhos
 le_arquivo('exemplo-de-input.txt')
 all_paths = tree.calculate_all_paths()
 
+# Separa os melhores caminhos de um nó até outro e
 def melhor_rota(x, y):
     caminhos = tree.find_all_paths(x, y)
     if not caminhos:
@@ -116,6 +128,7 @@ for node in todos_nos:
     for destino, tempo in distancias.items():
         dijkstra_tabela.at[node, destino] = round(tempo * 1000, 3)  # Convertendo para ms
 
+# Função que calcula o ping de um nó de origem até o destino
 def consulta_ping(x, y):
     if x not in tree.graph or y not in tree.graph:
         print("Erro: Um ou ambos os nós não existem no grafo.")
@@ -131,6 +144,7 @@ def consulta_ping(x, y):
     print(f"\nTempo de ping esperado: {distance} ms")
     print("==============================")
 
+# Função que calcula o traceroute a partir de um nó de origem até um nó de destino
 def consulta_traceroute(x, y):
     if x not in tree.graph or y not in tree.graph:
         print("Erro: Um ou ambos os nós não existem no grafo.")
@@ -141,6 +155,7 @@ def consulta_traceroute(x, y):
     print(f"Rota realizada: {rota}")
     print("==============================")
 
+# Loop para realizar os comandos de ping e traceroute
 while True:
     opcao = input("Informe a função desejada: 'ping', 'traceroute' ou 'sair': ").strip().lower()
     
@@ -182,10 +197,10 @@ nx.draw(
     grafo, pos, labels=rotulos_nos, with_labels=True, node_size=500, node_color=cores_nos, 
     font_size=10, font_color="black", font_weight="bold", arrows=True, edge_color=cores_arestas
 )
+# Salva o grafo gerado como uma imagem
 plt.savefig('grafo_resultante.png', transparent=False, facecolor='w')
 print("\nGrafo da Rede:")
 plt.show()
-
 
 # Criar tabela de caminhos
 path_data = []
@@ -204,11 +219,9 @@ path_tabela.to_csv('tabela_traceroute.csv', index=False)
 
 # Exibir tabela de caminhos
 print("Tabela Traceroute:")
-display(path_tabela)
 
 # Salvar tabela em CSV
 dijkstra_tabela.to_csv('tabela_ping.csv')
 
 # Exibir tabela de Dijkstra
 print("Tabela Ping:")
-display(dijkstra_tabela)
