@@ -119,7 +119,7 @@ def consulta_ping():
 # Chamar a função para interação com o usuário
 consulta_ping()
 
-# Ajustando layout para melhor organização
+# Criar grafo - ajustando layout para melhor organização
 pos = nx.kamada_kawai_layout(grafo)  # Layout mais estável e organizado
 
 # Definição de cores conforme o tipo de cabo
