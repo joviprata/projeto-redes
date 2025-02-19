@@ -218,10 +218,10 @@ path_tabela = pd.DataFrame(path_data)
 path_tabela.to_csv('tabela_traceroute.csv', index=False)
 
 # Exibir tabela de caminhos
-print('Tabela Traceroute disponível em "tabela_traceroute.csv"')
+print('Tabela Traceroute disponível em "tabela_traceroute.csv".')
 
 # Salvar tabela em CSV
 dijkstra_tabela.to_csv('tabela_ping.csv')
 
 # Exibir tabela de Dijkstra
-print('Tabela Ping disponível em "tabela_traceroute.csv"')
+print('Tabela Ping disponível em "tabela_traceroute.csv".')
