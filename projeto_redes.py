@@ -108,6 +108,14 @@ def melhor_rota(x, y):
         rota_str.append(f"{ip_u} -({tipo_cabo})-> {ip_v}")
     return " -> ".join(rota_str)
 
+# Criar tabela de Dijkstra
+todos_nos = list(tree.graph.keys())
+dijkstra_tabela = pd.DataFrame(index=todos_nos, columns=todos_nos)
+for node in todos_nos:
+    distancias = tree.dijkstra(node)
+    for destino, tempo in distancias.items():
+        dijkstra_tabela.at[node, destino] = round(tempo * 1000, 3)  # Convertendo para ms
+
 def consulta_ping(x, y):
     if x not in tree.graph or y not in tree.graph:
         print("Erro: Um ou ambos os nós não existem no grafo.")
@@ -178,14 +186,6 @@ plt.savefig('grafo_resultante.png', transparent=False, facecolor='w')
 print("\nGrafo da Rede:")
 plt.show()
 
-
-# Criar tabela de Dijkstra
-todos_nos = list(tree.graph.keys())
-dijkstra_tabela = pd.DataFrame(index=todos_nos, columns=todos_nos)
-for node in todos_nos:
-    distancias = tree.dijkstra(node)
-    for destino, tempo in distancias.items():
-        dijkstra_tabela.at[node, destino] = round(tempo * 1000, 3)  # Convertendo para ms
 
 # Criar tabela de caminhos
 path_data = []
