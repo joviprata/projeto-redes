@@ -94,11 +94,7 @@ def le_arquivo(arquivo):
 le_arquivo('exemplo-de-input.txt')
 all_paths = tree.calculate_all_paths()
 
-for (start, end), paths in all_paths.items():
-    print(f"Caminhos de {start} para {end}:")
-    for path in paths:
-        print(" -> ".join(path))
-
+# Ajustando layout para melhor organização
 # Ajustando layout para melhor organização
 pos = nx.kamada_kawai_layout(grafo)  # Layout mais estável e organizado
 
@@ -125,16 +121,37 @@ plt.savefig('grafo_resultante.png', transparent=False, facecolor='w')
 print("\nGrafo resultante:")
 plt.show()
 
+
 # Criar tabela de Dijkstra
 todos_nos = list(tree.graph.keys())
 dijkstra_tabela = pd.DataFrame(index=todos_nos, columns=todos_nos)
 for node in todos_nos:
     distancias = tree.dijkstra(node)
     for destino, tempo in distancias.items():
-        dijkstra_tabela.at[node, destino] = round(tempo, 6)
+        dijkstra_tabela.at[node, destino] = round(tempo * 1000, 3)  # Convertendo para ms
+
+# Criar tabela de caminhos
+path_data = []
+for (start, end), paths in all_paths.items():
+    path_data.append({
+        "Origem": start,
+        "Destino": end,
+        "Caminho": "; ".join([" -> ".join(path) for path in paths])
+    })
+
+# Criar DataFrame corretamente
+path_tabela = pd.DataFrame(path_data)
+
+# Salvar tabela de caminhos em CSV
+path_tabela.to_csv('tabela_traceroute.csv', index=False)
+
+# Exibir tabela de caminhos
+print("Tabela Traceroute:")
+display(path_tabela)
 
 # Salvar tabela em CSV
-dijkstra_tabela.to_csv('dijkstra_tabela.csv')
+dijkstra_tabela.to_csv('tabela_ping.csv')
 
-print("\nTabela de tempos de ping (Dijkstra):")
+# Exibir tabela de Dijkstra
+print("Tabela Ping:")
 display(dijkstra_tabela)
