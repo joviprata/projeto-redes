@@ -94,6 +94,20 @@ def le_arquivo(arquivo):
 le_arquivo('exemplo-de-input.txt')
 all_paths = tree.calculate_all_paths()
 
+def melhor_rota(x, y):
+    caminhos = tree.find_all_paths(x, y)
+    if not caminhos:
+        return "Nenhuma rota disponível"
+    melhor_caminho = min(caminhos, key=len)
+    rota_str = []
+    for i in range(len(melhor_caminho) - 1):
+        u, v = melhor_caminho[i], melhor_caminho[i + 1]
+        tipo_cabo = tree.cable_type_def(u, v)
+        ip_u = tree.ip_map.get(u, u)
+        ip_v = tree.ip_map.get(v, v)
+        rota_str.append(f"{ip_u} -({tipo_cabo})-> {ip_v}")
+    return " -> ".join(rota_str)
+
 def consulta_ping(x, y):
     if x not in tree.graph or y not in tree.graph:
         print("Erro: Um ou ambos os nós não existem no grafo.")
