@@ -1,4 +1,11 @@
-# Projeto de Redes: Simulação de envio de pacotes em uma rede hierárquica
+# Projeto de Redes: Simulação de rede em domínio autônomo
+
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6ccec9c9-e3d4-4caa-b9c4-5984590a6889" width="50%">
+</p>
+
+
 
 ## Sobre o projeto
 Este projeto foi desenvolvido com o intuito de aprofundar os conceitos relativos à camada de rede e camada de enlace através de projeto de rede e simulação. 
@@ -50,7 +57,7 @@ Para mais informações sobre ambientes virtuais em python, acesso o site a segu
 
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/joviprata"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/115483518?v=4" width="100px;" alt=""/><br /><sub><b>João Victor</b></sub></a><br />
+    <td align="center"><a href="https://github.com/joviprata"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/115483518?v=4" width="100px;" alt=""/><br /><sub><b>João Victor Prata</b></sub></a><br />
       <td align="center"><a href="https://github.com/lbritors"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/90286379?v=4" width="100px;" alt=""/><br /><sub><b>Leticia Brito</b></sub></a><br />
         <td align="center"><a href="https://github.com/RafaBonach"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/104152350?v=4" width="100px;" alt=""/><br /><sub><b>Rafael Bonach</b></sub></a><br />  
   </tr>
