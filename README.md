@@ -1,4 +1,4 @@
-# projeto-redes
+# Projeto de Redes: Simulação de envio de pacotes em uma rede hierárquica
 
 ## Sobre o projeto
 Este projeto foi desenvolvido com o intuito de aprofundar os conceitos relativos à camada de rede e camada de enlace através de projeto de rede e simulação. 
