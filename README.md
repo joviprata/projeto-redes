@@ -10,7 +10,7 @@
 ## Sobre o projeto
 Este projeto foi desenvolvido com o intuito de aprofundar os conceitos relativos à camada de rede e camada de enlace através de projeto de rede e simulação. 
 
-Em [projeto_redes.py](./projeto_redes.py) está todo o código que cria uma rede em topologia de arvore a partir do documento [exemplo_de_input.txt](./exemplo_de_input.txt). Após a execução é criada uma imagem do grafo que representa a rede, uma tabela de roteamento e uma tabela de ping, ambos no formato .csv.
+Em [projeto_redes.py](./projeto_redes.py) está todo o código que cria uma rede em topologia de árvore a partir do documento [exemplo_de_input.txt](./exemplo_de_input.txt). Após a execução é criada uma imagem do grafo que representa a rede, uma tabela de roteamento e uma tabela de ping, ambos no formato .csv.
 
 ## Instruções de uso para executar o Projeto
 É necessário a instalação das seguintes bibliotecas:
@@ -44,7 +44,7 @@ Em seguida, é necessário que o ambiente virtual seja inicializado:
   .venv\Scripts\activate
   ```
 
-Finalmente, é necessário realizar o processo de instalação das bibliotecas citadas anteriormente. Para isso, a forma mais rapida seria digitando no terminal ```pip install NOME-DA-BIBLIOTECA```.
+Finalmente, é necessário realizar o processo de instalação das bibliotecas citadas anteriormente. Para isso, a forma mais rápida seria digitando no terminal ```pip install NOME-DA-BIBLIOTECA```.
 
 Assim, basta rodar o código em uma IDE ou terminal. Caso apresente algum erro, recomenda-se a reinicialização da IDE utilizada para execução.
 
